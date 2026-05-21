@@ -21,28 +21,25 @@ if prompt := st.chat_input("اسأل لُجّ..."):
         message_placeholder = st.empty()
         api_key = st.secrets.get("ANTHROPIC_API_KEY", "").strip()
 
-        if not api_key:
-            st.error("خطأ: مفتاح الـ API مفقود في إعدادات Secrets.")
-        else:
-            try:
-                client = anthropic.Anthropic(api_key=api_key)
-                
-                # التعديل هنا: فرض استخدام نموذج سونيت 3 المتوازن
-                # هذا النموذج اقتصادي مقارنة بـ Opus وأذكى من النماذج القديمة
-                my_model = "claude-3-sonnet-20240229"
-                
-                # إرسال الطلب
-                response = client.messages.create(
-                    model=my_model,
-                    max_tokens=800,
-                    system="أنتِ لُجّ، مرشدة تعليمية ذكية.",
-                    messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
-                )
-                
-                full_response = response.content[0].text
-                message_placeholder.markdown(full_response)
-                st.session_state.messages.append({"role": "assistant", "content": full_response})
-                
-            except Exception as e:
-                st.error(f"حدث خطأ: {str(e)}")
-                st.write("نصيحة: إذا ظهر خطأ 404، فهذا يعني أن هذا النموذج غير مفعل في حسابك، يرجى مراجعة قسم Billing أو استخدام 'claude-3-opus-20240229' إذا كان يعمل.")
+        try:
+            client = anthropic.Anthropic(api_key=api_key)
+            
+            # نستخدم النموذج الذي يعمل فقط وهو Opus
+            response = client.messages.create(
+                model="claude-3-opus-20240229",
+                max_tokens=800,
+                system="أنتِ لُجّ، مرشدة تعليمية ذكية.",
+                messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
+            )
+            
+            full_response = response.content[0].text
+            usage = response.usage # استخراج كمية التوكنز المستهلكة
+            
+            message_placeholder.markdown(full_response)
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
+            
+            # عرض التكلفة بشفافية
+            st.caption(f"استهلاك التوكنز لهذه الرسالة: {usage.input_tokens} (مدخل) + {usage.output_tokens} (مخرج)")
+            
+        except Exception as e:
+            st.error(f"خطأ: {e}")
