@@ -19,7 +19,6 @@ if prompt := st.chat_input("اسأل لُجّ..."):
 
     with st.chat_message("assistant"):
         message_placeholder = st.empty()
-        # التأكد من المفتاح
         api_key = st.secrets.get("ANTHROPIC_API_KEY", "").strip()
 
         if not api_key:
@@ -28,15 +27,13 @@ if prompt := st.chat_input("اسأل لُجّ..."):
             try:
                 client = anthropic.Anthropic(api_key=api_key)
                 
-                # استكشاف النماذج المتاحة تلقائياً في حسابك
-                models = client.models.list()
-                # اختيار أول نموذج متاح في حسابك لتجنب خطأ 404
-                my_model = models.data[0].id
+                # التعديل هنا: فرض استخدام نموذج سونيت 3 المتوازن
+                # هذا النموذج اقتصادي مقارنة بـ Opus وأذكى من النماذج القديمة
+                my_model = "claude-3-sonnet-20240229"
                 
                 # إرسال الطلب
                 response = client.messages.create(
-                    # استبدلي السطر الذي يحتوي على model=my_model بهذا السطر:
-model="claude-3-5-sonnet-20241022",
+                    model=my_model,
                     max_tokens=800,
                     system="أنتِ لُجّ، مرشدة تعليمية ذكية.",
                     messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
@@ -48,4 +45,4 @@ model="claude-3-5-sonnet-20241022",
                 
             except Exception as e:
                 st.error(f"حدث خطأ: {str(e)}")
-                st.write("نصيحة: تأكدي أن مفتاح الـ API مأخوذ من مساحة العمل 'Default' وأن البطاقة الائتمانية مفعلة في قسم Billing.")
+                st.write("نصيحة: إذا ظهر خطأ 404، فهذا يعني أن هذا النموذج غير مفعل في حسابك، يرجى مراجعة قسم Billing أو استخدام 'claude-3-opus-20240229' إذا كان يعمل.")
