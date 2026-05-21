@@ -33,7 +33,7 @@ if prompt := st.chat_input("اسأل لُجّ..."):
                 client = anthropic.Anthropic(api_key=api_key)
                 
                 response = client.messages.create(
-                    model="claude-3-haiku-20240307", 
+                    model="claude-2.1", 
                     max_tokens=500,
                     system="أنتِ لُجّ، مرشدة تعليمية ذكية.",
                     messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
