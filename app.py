@@ -108,7 +108,7 @@ if prompt := st.chat_input("اسأل لُجّ أي سؤال عن الرخصة ا
                 client = anthropic.Anthropic(api_key=api_key)
                 # استخدام أحدث موديل متوفر لجميع الحسابات الموثقة
                 response = client.messages.create(
-                   model="claude-3-haiku-20240307",
+                  model="claude-2.1",
                     max_tokens=800,
                     system="أنتِ لُجّ، مرشدة تعليمية ذكية متخصصة في الرخصة المهنية السعودية. إجاباتك دقيقة وتربوية.",
                     messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
