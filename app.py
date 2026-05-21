@@ -35,7 +35,8 @@ if prompt := st.chat_input("اسأل لُجّ..."):
                 
                 # إرسال الطلب
                 response = client.messages.create(
-                    model=my_model,
+                    # استبدلي السطر الذي يحتوي على model=my_model بهذا السطر:
+model="claude-3-5-sonnet-20241022",
                     max_tokens=800,
                     system="أنتِ لُجّ، مرشدة تعليمية ذكية.",
                     messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
