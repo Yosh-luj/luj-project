@@ -113,12 +113,13 @@ if prompt := st.chat_input("اسأل لُجّ أي سؤال عن الرخصة ا
             # شخصية لُجّ
             system_prompt = "أنتِ لُجّ، وكيلة ذكاء اصطناعي ذكية وودودة. صُممتِ لمساعدة المعلمين في السعودية على اجتياز اختبار الرخصة المهنية (العام). إجاباتك دقيقة، مشجعة، ومختصرة."
             
-            response = client.messages.create(
-                model="claude-3-5-sonnet-20240620",
-                max_tokens=800,
-                system=system_prompt,
-                messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
-            )
+            # ابحث عن سطر الـ response وقم بتغيير model إلى:
+response = client.messages.create(
+    model="claude-3-5-sonnet-latest",  # هذا الاسم هو الأضمن دائماً
+    max_tokens=800,
+    system=system_prompt,
+    messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
+)
             
             full_response = response.content[0].text
             message_placeholder.markdown(full_response)
