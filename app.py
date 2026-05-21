@@ -68,22 +68,25 @@ if prompt := st.chat_input("اسأل لُجّ أي سؤال..."):
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    with st.chat_message("assistant"):
+  with st.chat_message("assistant"):
         message_placeholder = st.empty()
-        # تنظيف المفتاح من أي فراغات
+        
+        # أضف هذا السطر هنا ليكون الكود آمناً
         api_key = st.secrets.get("ANTHROPIC_API_KEY", "").strip()
         
         if not api_key:
             st.error("خطأ: مفتاح الـ API غير موجود في الإعدادات.")
         else:
             try:
+                # والآن استخدم api_key الذي قمنا بتنظيفه للتو
                 client = anthropic.Anthropic(api_key=api_key)
                 response = client.messages.create(
-                    model="claude-3-haiku-20240307",
+                    model="claude-3-5-sonnet-20241022",
                     max_tokens=800,
-                    system="أنتِ لُجّ، مرشدة تعليمية ذكية. إجاباتك دقيقة ومختصرة.",
+                    system="أنتِ لُجّ، مرشدة تعليمية ذكية.",
                     messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
                 )
+                # ... بقية الكود الخاص بالعرض ...
                 full_response = response.content[0].text
                 message_placeholder.markdown(full_response)
                 st.session_state.messages.append({"role": "assistant", "content": full_response})
