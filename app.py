@@ -8,6 +8,27 @@ custom_css = """
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;900&display=swap');
 
+
+/* إصلاح أزرار القائمة الجانبية لتندمج مع البنفسجي */
+    [data-testid="stSidebar"] div.stButton > button {
+        background-color: transparent !important;
+        border: 1px solid rgba(255,255,255,0.2) !important;
+        color: white !important;
+        border-radius: 8px;
+        text-align: right !important;
+        justify-content: flex-start !important; /* محاذاة لليمين */
+    }
+    [data-testid="stSidebar"] div.stButton > button:hover {
+        background-color: rgba(255,255,255,0.1) !important;
+    }
+    /* تمييز زر بدء التدريب الرئيسي ليصبح أبيض */
+    [data-testid="stSidebar"] div.stButton > button[kind="primary"] {
+        background-color: white !important;
+        color: #6A38C2 !important;
+        border: none !important;
+        font-weight: bold !important;
+        justify-content: center !important; /* هذا الزر يبقى بالمنتصف */
+    }
     /* توحيد الخط والخلفية */
     html, body, [class*="css"] {
         font-family: 'Tajawal', sans-serif !important;
