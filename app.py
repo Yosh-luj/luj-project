@@ -8,14 +8,33 @@ if "messages" not in st.session_state:
 
 st.markdown("### 🤖 لُجّ - المرشد الذكي")
 
+for message in st.session_state.messages:
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
 if prompt := st.chat_input("اسأل لُجّ..."):
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with st.chat_message("user"):
+        st.markdown(prompt)
+
     with st.chat_message("assistant"):
+        message_placeholder = st.empty()
         api_key = st.secrets.get("ANTHROPIC_API_KEY", "").strip()
+
         try:
             client = anthropic.Anthropic(api_key=api_key)
-            # عرض الموديلات المتاحة فعلياً
-            models = client.models.list()
-            model_names = [m.id for m in models.data]
-            st.error(f"الموديلات المتاحة في حسابك هي: {model_names}")
+            
+            # هذا هو النموذج الذي استخرجناه من حسابك
+            response = client.messages.create(
+                model="claude-sonnet-4-6",
+                max_tokens=800,
+                system="أنتِ لُجّ، مرشدة تعليمية ذكية.",
+                messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages]
+            )
+            
+            full_response = response.content[0].text
+            message_placeholder.markdown(full_response)
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
+            
         except Exception as e:
             st.error(f"خطأ: {e}")
