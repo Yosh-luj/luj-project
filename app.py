@@ -136,7 +136,8 @@ elif st.session_state.current_page == "💬 المرشد الذكي":
                 message_placeholder = st.empty()
                 try:
                     response = client.messages.create(
-                        model="claude-3-haiku-20240307",
+                       # استخدمي هذا السطر في دالة client.messages.create
+                        model="claude-haiku-4-5-20251001",
                         max_tokens=1000,
                         system="أنت لُجّ، مساعد ذكي وخبير متخصص في معايير الرخصة المهنية للمعلمين في السعودية (هيئة تقويم التعليم والتدريب). إجاباتك دقيقة، تربوية، وتركز على تبسيط المفاهيم التربوية والكمية واللغوية بأسلوب يشبه أسئلة قياس.",
                         messages=[
